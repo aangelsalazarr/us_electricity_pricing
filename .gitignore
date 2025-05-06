@@ -172,3 +172,21 @@ cython_debug/
 
 # PyPI configuration file
 .pypirc
+
+
+# including code that cannot be publicly displayed
+# will provide examples/snippets upon request
+
+## SPP
+
+## NYISO
+
+## CAISO
+
+## ERCOT
+
+## PJM
+
+## ISONE
+
+## MISO
