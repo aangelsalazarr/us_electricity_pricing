@@ -177,16 +177,5 @@ cython_debug/
 # including code that cannot be publicly displayed
 # will provide examples/snippets upon request
 
-## SPP
-
-## NYISO
-
-## CAISO
-
-## ERCOT
-
-## PJM
-
-## ISONE
-
-## MISO
+# we will be storing all sensitive info in a private info folder
+private_info

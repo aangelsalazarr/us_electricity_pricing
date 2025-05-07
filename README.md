@@ -1,6 +1,8 @@
 # US Electricity Pricing
 Purpose of this effort is to unify datasets across seven different ISOs in order to track and visualize LMP trends across the United States. 
 
+Generally, real-time ISO Energy data exists in Silos. This repository aims to walk through the process of unifying data sets for further analyis. 
+
 ## ISOs
 [PJM]() 
 - US States Covered: 
