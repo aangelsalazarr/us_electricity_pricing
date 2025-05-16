@@ -6,6 +6,9 @@ from private_info import ercot_api_struct as eas # stores api structure framewor
 # now we are loading info from spp pull function in
 from private_info import spp_functions as sfuncs
 
+# now we are loading in from nyiso pull function
+from private_info import nyiso_functions as nfuncs
+
 
 # let's set up a way to define what date dataset we want to pulll from 
 from datetime import date, datetime, timedelta
@@ -33,8 +36,13 @@ ercot_client = efuncs.ERCOT_LMP_Client(
 
 
 # setting up SPP function pull
-sfuncs.pull_spp_lmp(choose_date="20250514", topic_id='LMP_By_SETTLEMENT_LOC', file_type='csv', 
-             save_path="datasets/spp_lmp_data")
+##sfuncs.pull_spp_lmp(choose_date="20250514", topic_id='LMP_By_SETTLEMENT_LOC', file_type='csv', 
+ ##            save_path="datasets/spp_lmp_data")
+
+
+# setting up NYISO function pull
+nfuncs.grab_nyiso_daily_lbmp(date_pull="20250514", save_path="datasets/nyiso_lmp_data", 
+                      topic_id="realtime_zone")
 
 
 
