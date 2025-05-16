@@ -3,6 +3,10 @@ from private_info import ercot_functions as efuncs
 from private_info import credentials as creds  # this stores ISO creds
 from private_info import ercot_api_struct as eas # stores api structure framework
 
+# now we are loading info from spp pull function in
+from private_info import spp_functions as sfuncs
+
+
 # let's set up a way to define what date dataset we want to pulll from 
 from datetime import date, datetime, timedelta
 set_tdelta=0
@@ -25,4 +29,13 @@ ercot_client = efuncs.ERCOT_LMP_Client(
 )
 
 # initializing the class
-ercot_lmp_ercot=ercot_client.get_lmp_data()
+# ercot_client.get_lmp_data()
+
+
+# setting up SPP function pull
+sfuncs.pull_spp_lmp(choose_date="20250514", topic_id='LMP_By_SETTLEMENT_LOC', file_type='csv', 
+             save_path="datasets/spp_lmp_data")
+
+
+
+
