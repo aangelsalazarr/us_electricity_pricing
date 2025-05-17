@@ -41,8 +41,8 @@ ercot_client = efuncs.ERCOT_LMP_Client(
 
 
 # setting up NYISO function pull
-nfuncs.grab_nyiso_daily_lbmp(date_pull="20250514", save_path="datasets/nyiso_lmp_data", 
-                      topic_id="realtime_zone")
+##nfuncs.grab_nyiso_daily_lbmp(date_pull="20250514", save_path="datasets/nyiso_lmp_data", 
+##                      topic_id="realtime_zone")
 
 
 
