@@ -26,7 +26,7 @@ day_num = today.strftime("%d")
 month_num = today.strftime("%m")
 year_num = today.strftime("%Y")
 
-
+'''
 # setting up process of grabbing ercot real time LMP by node (5 minute intervals)
 # we must initialize our ercot client class
 ercot_client = efuncs.ERCOT_LMP_Client(
@@ -53,18 +53,6 @@ sfuncs.pull_spp_lmp(choose_date="20250517", topic_id='LMP_By_SETTLEMENT_LOC', fi
 nfuncs.grab_nyiso_daily_lbmp(date_pull="20250517", save_path="datasets/nyiso_lmp_data", 
                       topic_id="realtime_zone")
 
-
-# setting up ISONE function pull
-# need to first load in our csv file with hubs/node ids
-local_isone_hubs = pl.read_csv('private_info/isone_lmp_locations.csv')
-ifuncs.aggregate_isone_lmps(locations=local_isone_hubs, begin_date=f"20250517",
-                     auth_uname=creds.isone_creds['username'], 
-                     auth_pword=creds.isone_creds['password'], 
-                     topic_id="fiveminutelmp",
-                     save_path="datasets/isone_lmp_data"
-                                     )
-
-
 # setting up function to pull from caiso as well
 caiso_client = cfuncs.CAISO_LMP_Client(
     topic_id=cas.fivemin_lmp['topic_id'], 
@@ -76,3 +64,16 @@ caiso_client = cfuncs.CAISO_LMP_Client(
 )
 
 caiso_client.get_lmp_data()
+'''
+
+# setting up ISONE function pull
+# need to first load in our csv file with hubs/node ids
+local_isone_price_locs = pl.read_csv("private_info/isone_lmp_locations.csv")  # path needs to be tweaked if someone else
+local_isone_hubs = local_isone_price_locs['location_id']
+
+ifuncs.aggregate_isone_lmps(locations=local_isone_hubs, begin_date=f"20250517",
+                     auth_uname=creds.isone_creds['username'], 
+                     auth_pword=creds.isone_creds['password'], 
+                     topic_id="fiveminutelmp",
+                     save_path="datasets/isone_lmp_data"
+                                     )
