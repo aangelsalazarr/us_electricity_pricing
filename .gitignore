@@ -180,4 +180,7 @@ cython_debug/
 # we will be storing all sensitive info in a private info folder
 private_info
 datasets
-datasets
+
+# cannot add because each file is about ~800-1000 mb
+final_data  
+

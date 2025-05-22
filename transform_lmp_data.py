@@ -39,22 +39,33 @@ def create_std_timestamp(dataframes: list, cols_keep: list):
     '''
     df_filtered = [dataset.select(cols_keep) for dataset in dataframes]
 
-
+    # here is where we will be adding our new dfs
     new_dfs = []
+
+    # iterate through each df, and create a 'formatted_timestap' column that only includes Hour and Minute
     for df in df_filtered:
-        df = df.with_columns(
-            pl.col("timestamp").dt.strftime("%m-%d-%Y %H:%M:%S").alias("formatted_timestamp")
+        temp_df = df.with_columns(
+            pl.col('timestamp').dt.strftime("%m-%d-%Y %H:%M").alias('fmt_timestamp')
+            )
+        
+        temp_df = temp_df.with_columns(
+            pl.col("fmt_timestamp").str.strptime(pl.Datetime, format="%m-%d-%Y %H:%M")
         )
-        new_dfs.append(df)
+
+        new_dfs.append(temp_df)
 
     # removing timezone from columns with UTC timezone def
     new_dfs = [df.with_columns(
-        pl.col("timestamp").dt.replace_time_zone(None)
+        pl.col("timestamp").dt.replace_time_zone(None), 
+        pl.col('fmt_timestamp').dt.replace_time_zone(None)
     ) for df in new_dfs]
 
     combined_dfs = pl.concat(new_dfs, how="vertical")
+    
+    # converting into pandas df so it works with seaborn
+    combined_pandas_df = combined_dfs.to_pandas()
 
-    return combined_dfs
+    return combined_pandas_df
 
 
 def plot_lmp(dataframe: object, col_choose:str, geo_dataframe:object):
