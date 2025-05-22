@@ -143,7 +143,8 @@ def transform_ercot_data(ercot_df: object):
 
     ercot_df = ercot_df.with_columns(
         pl.lit("ERCOT").alias("iso_id"),
-        pl.col('timestamp').dt.hour().alias('hour')
+        pl.col('timestamp').dt.hour().alias('hour'), 
+        pl.col('timestamp').dt.minute().alias('minute')
     )
 
     return ercot_df
@@ -176,7 +177,9 @@ def transform_caiso_data(caiso_df: object):
 
     caiso_df = caiso_df.with_columns(
         pl.lit("CAISO").alias("iso_id"),
-        pl.col('timestamp').dt.hour().alias('hour')
+        pl.col('timestamp').dt.hour().alias('hour'),
+        pl.col('timestamp').dt.minute().alias('minute')
+
     )
 
     return caiso_df
@@ -201,7 +204,9 @@ def transform_nyiso_data(nyiso_df:object):
 
     nyiso_df = nyiso_df.with_columns(
         pl.lit("NYISO").alias("iso_id"),
-        pl.col('timestamp').dt.hour().alias('hour')
+        pl.col('timestamp').dt.hour().alias('hour'),
+        pl.col('timestamp').dt.minute().alias('minute')
+
     )
 
     return nyiso_df
@@ -226,7 +231,9 @@ def transform_spp_data(spp_df:object):
 
     spp_df = spp_df.with_columns(
         pl.lit("SPP").alias("iso_id"),
-        pl.col('timestamp').dt.hour().alias('hour')
+        pl.col('timestamp').dt.hour().alias('hour'),
+        pl.col('timestamp').dt.minute().alias('minute')
+
     )
 
     return spp_df
@@ -252,7 +259,9 @@ def transform_isone_data(isone_df:object):
 
     isone_df = isone_df.with_columns(
         pl.lit("ISONE").alias("iso_id"),
-        pl.col('timestamp').dt.hour().alias('hour')
+        pl.col('timestamp').dt.hour().alias('hour'),
+        pl.col('timestamp').dt.minute().alias('minute')
+
     )
 
     return isone_df
@@ -277,7 +286,9 @@ def transform_pjm_data(pjm_df:object):
 
     pjm_df = pjm_df.with_columns(
         pl.lit("PJM").alias("iso_id"),
-        pl.col('timestamp').dt.hour().alias('hour')
+        pl.col('timestamp').dt.hour().alias('hour'),
+        pl.col('timestamp').dt.minute().alias('minute')
+
     )
 
     return pjm_df
@@ -300,7 +311,9 @@ def transform_miso_data(miso_df:object):
 
     miso_df = miso_df.with_columns(
         pl.lit("MISO").alias("iso_id"),
-        pl.col('timestamp').dt.hour().alias('hour')
+        pl.col('timestamp').dt.hour().alias('hour'),
+        pl.col('timestamp').dt.minute().alias('minute')
+
     )
 
     return miso_df

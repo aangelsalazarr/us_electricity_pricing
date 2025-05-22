@@ -7,27 +7,57 @@ import polars as pl
 ###############################################################################
 ### USED TO VISUALIZE MASTER DATA SETS
 ###############################################################################
-def lmp_iso_fgrid(dataset: object):
+def lmp_iso_fgrid(dataset: object, fgrid_type = "standard"):
     '''
     Given a master dataset containing all LMP data by 7 ISOs, return a facet grid by ISO
+
+    fgrid_type = standard (by iso), hour_iso (by hour with iso hue)
     '''
 
-    plt.figure(figsize=[24,10])
+    if fgrid_type == "standard":
+        plt.figure(figsize=[24,10])
 
-    # creating facet grid with multiple plots based on iso_id
-    g = sns.FacetGrid(data=dataset,  col='iso_id', col_wrap=4)
+        # creating facet grid with multiple plots based on iso_id
+        g = sns.FacetGrid(data=dataset,  col='iso_id', col_wrap=4)
 
-    # mapping scatter plot to each of the grid in the facet grid
-    g.map(sns.scatterplot, 'fmt_timestamp', '5min_lmp', s=10)
+        # mapping scatter plot to each of the grid in the facet grid
+        g.map(sns.scatterplot, 'fmt_timestamp', '5min_lmp', s=10)
 
-    # rotating x axis labels by 90 degrees
-    for ax in g.axes.flat:
-        ax.tick_params(axis='x', rotation=90)
+        # rotating x axis labels by 90 degrees
+        for ax in g.axes.flat:
+            ax.tick_params(axis='x', rotation=90)
 
-    g.set_axis_labels('', 'Locational Marginal Price (LMP, $/MWh)')
-    g.fig.suptitle('USA Locational Marginal Pricing ($/MWh)', fontsize=12, y=1.03)
+        g.set_axis_labels('', 'Locational Marginal Price (LMP, $/MWh)')
+        g.fig.suptitle('USA Locational Marginal Pricing ($/MWh)', fontsize=12, y=1.03)
 
-    plt.show()
+        plt.show()
+
+
+    elif fgrid_type == "hour_iso":
+
+        plt.figure(figsize=[24,10])
+
+        # creating facet grid with multiple plots based on iso_id
+        g = sns.FacetGrid(data=dataset,  col='hour', col_wrap=6, hue='iso_id')
+
+        # mapping scatter plot to each of the grid in the facet grid
+        g.map(sns.scatterplot, 'minute', '5min_lmp', s=10)
+
+        g.add_legend()
+
+        # rotating x axis labels by 90 degrees
+        for ax in g.axes.flat:
+            ax.tick_params(axis='x', rotation=90)
+
+        g.set_axis_labels('', 'Locational Marginal Price (LMP, $/MWh)')
+        g.fig.suptitle('USA Locational Marginal Pricing ($/MWh)', fontsize=12, y=1.03)
+
+        plt.show()
+
+
+    else: 
+        print('please select one of the 2 presets!')
+    
 
 
 
