@@ -105,15 +105,49 @@ def lmp_plot_distribution(dataset: object, vis_type = 'standard'):
     else: 
         print('please choose a valid kde plot type!')
 
+    
+    def generate_iso_boxplot(dataset:object, mean_markers=True, fsize=[8,6]):
+        '''
+        Given a dataset with ISO and 5min LMP data, generate a box plot to compare distribution
+        '''
+        fig, ax = plt.subplots(figsize=fsize)
+
+        # generate boxplot
+        box_plot = sns.boxplot(data=dataset, x='iso_id', y='5min_lmp', showfliers=True)
+
+        # adding average/mean points
+        means = dataset.groupby('iso_id')['5min_lmp'].mean() # calculate mean values of each iso lmp
+
+        # adding mean markers to our graph is selected
+        if mean_markers==True:
+            # adding mean markers
+            for i, (iso, mean) in enumerate(means.items()):
+                ax.plot(i, mean, marker='D', color='red', markersize=8, markeredgecolor='darkred', markeredgewidth=1.5)
+
+            # adding stat annotation
+            ax.text(0.02, 0.98, 'Red Diamonds Indicate Means', transform=ax.transAxes, va='top', fontsize=8, 
+                    bbox=dict(boxstyle='round', facecolor='blue', alpha=0.5))
+            
+        else:
+            return
+
+        plt.title('Regional LMP Distribution Comparison', fontsize=12, pad=10)
+        plt.xlabel('ISO Region')
+        plt.ylabel('LMP ($/MWh)')
+        plt.grid(True, alpha=0.75, axis='y')
+        plt.tight_layout()
+        plt.show()
+
 
 ###############################################################################
-### USED TO VISUALIZE ERCOT DATASET
+### USED TO VISUALIZE Single Plots
 ###############################################################################
 
-def lmp_node_hour_hmap(dataframe: object, plot_title: None):
+def lmp_node_hour_hmap(dataframe: object, index_by="node_id", plot_title= None):
     '''
     Args
         provide a dataframe in polars format and it will make transformations
+        index_by can be either node_id and iso_id
 
     Output
         provides user with necessary objects needed to visualize correlations
@@ -121,27 +155,21 @@ def lmp_node_hour_hmap(dataframe: object, plot_title: None):
     Needed: nodenames as node_id, hour values as hour and 5min lmps as 5min_lmp
     provide a title for the plot
     '''
-    # group by node_id and hour then calculate mean of lmp values
-    pandas_df = dataframe.to_pandas()
+    # group by index_by and hour then calculate mean of lmp values
 
     pivot_df = pd.pivot_table(
-        pandas_df, values='5min_lmp', index='node_id', columns='hour', aggfunc='mean'
+        dataframe, values='5min_lmp', index=index_by, columns='hour', aggfunc='mean'
     )
 
     plt.figure(figsize=[12,4])
 
-    ax = sns.heatmap(pivot_df, cmap='coolwarm', fmt='.0f',
-                    annot=True, linewidths=0.5)
+    ax = sns.heatmap(pivot_df, cmap='viridis', fmt='.0f', annot=True, linewidths=0.5)
     
     plt.title(f'{plot_title}')
-
     plt.show()
 
-    return pivot_df
 
-
-
-def lmp_corr_matrix(dataframe: object, index=None, columns=None):
+def lmp_corr_matrix(dataframe: object, cols_by='node_id', index=None, columns=None):
     '''
     Returns a correlation matrix
     '''
@@ -151,7 +179,7 @@ def lmp_corr_matrix(dataframe: object, index=None, columns=None):
 
     if index == None or columns == None:
         node_pivot = pd.pivot_table(
-            data=pandas_df, values='5min_lmp', index='hour', columns='node_id', 
+            data=pandas_df, values='5min_lmp', index='hour', columns=cols_by, 
             aggfunc='mean'
         )
 
@@ -170,23 +198,20 @@ def lmp_corr_matrix(dataframe: object, index=None, columns=None):
                 linewidth=0.5, vmin=0.75, vmax=1)
     
     plt.title('ERCOT Hub Correlation Matrix')
-    
     plt.show()
 
-    return corr_matrix
 
-
-def create_lag_plot(dataframe: object, lag_by:int, selected_node:str):
+def create_lag_plot(dataframe: object, lag_by:int, selected_node:str, over_by='node_id'):
     '''
     Given a dataframe and input params, generate a lag plot
     '''
-    sorted_df = dataframe.sort(['node_id', 'timestamp'])
+    sorted_df = dataframe.sort([over_by, 'timestamp'])
     df_with_lag = sorted_df.with_columns(
-        pl.col('5min_lmp').shift(lag_by).over('node_id').alias(f'5min_lmp_lag{lag_by}')
+        pl.col('5min_lmp').shift(lag_by).over(over_by).alias(f'5min_lmp_lag{lag_by}')
     )
     df_lag_clean = df_with_lag.drop_nulls(subset=[f'5min_lmp_lag{lag_by}'])
     df_node = df_lag_clean.filter(
-        pl.col('node_id') == selected_node
+        pl.col(over_by) == selected_node
     )
     df_pandas = df_node.select(['5min_lmp', f'5min_lmp_lag{lag_by}']).to_pandas()
 
