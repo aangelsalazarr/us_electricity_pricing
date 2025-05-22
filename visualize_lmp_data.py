@@ -54,11 +54,56 @@ def lmp_iso_fgrid(dataset: object, fgrid_type = "standard"):
 
         plt.show()
 
-
     else: 
         print('please select one of the 2 presets!')
-    
 
+
+
+def lmp_plot_distribution(dataset: object, vis_type = 'standard'):
+    '''
+    Purpose is to generate visuals associated with understanding distribution of data
+    Options: standard (kde plot by iso_id), hour_iso (kde plot by hour and iso hue)
+    '''
+    if vis_type == "standard":
+        # lets plot distribution of pricing
+        plt.figure(figsize=[12,6])
+
+        bins=range(-50, 170, 2) # low, high and seperate by N values
+
+        g = sns.FacetGrid(data=dataset, col='iso_id', col_wrap=4)
+        g.map(sns.kdeplot, '5min_lmp', clip=(-25, 100))  # clipping data range from -250 to 250 $/mwh
+        g.add_legend()
+
+        for ax in g.axes.flat:
+            ax.tick_params(axis='x', rotation=90)
+
+        g.set_axis_labels('Locational Marginal Pricing, $/MWh', 'Density')
+        g.fig.suptitle('USA Locational Marginal Pricing ($/MWh)', fontsize=12, y=1.03)
+
+        plt.grid(False)
+        plt.figure()
+
+    elif vis_type == "hour_iso":
+        # lets plot distribution of pricing
+        plt.figure(figsize=[12,6])
+
+        bins=range(-50, 170, 2) # low, high and seperate by N values
+
+        g = sns.FacetGrid(data=dataset, col='hour', col_wrap=6, hue='iso_id')
+        g.map(sns.kdeplot, '5min_lmp', clip=(-25, 100))  # clipping data range from -250 to 250 $/mwh
+        g.add_legend()
+
+        for ax in g.axes.flat:
+            ax.tick_params(axis='x', rotation=90)
+
+        g.set_axis_labels('Locational Marginal Pricing, $/MWh', 'Density')
+        g.fig.suptitle('USA Locational Marginal Pricing ($/MWh)', fontsize=12, y=1.03)
+
+        plt.grid(False)
+        plt.figure()
+
+    else: 
+        print('please choose a valid kde plot type!')
 
 
 ###############################################################################
