@@ -34,6 +34,10 @@ Generally, real-time ISO Energy data exists in Silos. This repository aims to wa
 
 # Locational Marginal Pricing (LMP) Explained
 - LMP can be quickly defined as the marginal cost to provide the next MW of Load at a *specific location* in the electric grid. 
+- LMP is made up of 3 components: 
+    1. System Energy Price: Depends on price of fuel (e.g. Natural Gas) and generally signals price of electricity at a reference point (e.g. Node)
+    2. Transmission Congestion Costs: marginal costs of congestions at a specific node compared to the load average of the system prices. Low demand yields low congestion costs. 
+    3. Cost of Marginal Loss: electricity lost during the process of long-distance transport. 
 - Functioning like a stock market for electrons, LMP price data can provide us with insights on many aspects of the grid ranging from supply/demand imbalances to grid reliability to potential opportunities for the development of energy systems
 
 # Mini Case Study: Analyzing 1 Day Worth of Data (May 17, 2025)
@@ -52,6 +56,9 @@ Generally, real-time ISO Energy data exists in Silos. This repository aims to wa
 ![USA Negative LMP Pricing](readme_figures/usa_lmp_negative_pricing.png)
 
 ![ERCOT LMP by Node and Hour](readme_figures/ercot_heatmap_1.png)
+
+# Limitations
+- In our current analsys we only consider Energy Prices and ignore other data values for sake of simplicity. 
 
 # Disclaimer!
 - Geospatial Data efforts currently fall under another project I am working on. Moreover, I am not entirely sure whether I can publish LMP coordinate data and thus I can only supply these generated data figures. I am more than happy to walk through how my efforts have allowed me to find and extract LMP coordinates. 
